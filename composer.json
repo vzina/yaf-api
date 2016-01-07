@@ -1,0 +1,27 @@
+{
+  "name": "vzina/yaf",
+  "description": "The yaf Framework.",
+  "keywords": [
+    "framework",
+    "yaf"
+  ],
+  "license": "MIT",
+  "type": "yaf",
+  "require": {
+    "php": ">=5.4.0",
+    "phpunit/phpunit": "4.8.18"
+  },
+  "autoload": {
+    "psr-4": {
+      "Test\\": "tests/"
+    }
+  },
+  "minimum-stability": "dev",
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "http://packagist.phpcomposer.com"
+    },
+    {"packagist": false}
+  ]
+}

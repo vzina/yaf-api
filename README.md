@@ -1,7 +1,7 @@
 #Yaf-api
 ######yaf安装：
 ```shell
-sudo apt-get install gcc gcc-c++ make automake autoconf
+sudo yum -y install gcc gcc-c++ make automake autoconf
 
 wget http://pecl.php.net/get/yaf-2.2.9.tgz && tar zxvf yaf-2.2.9.tgz && cd yaf-2.2.9
 

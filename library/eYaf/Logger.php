@@ -44,11 +44,12 @@ class Logger extends \SplFileObject
         static::getLogger($env, $open_mode)->log($buffer);
     }
 
-    public static function getLogger($env = null, $open_mode = "a")
+    public static function getLogger($env = null, $open_mode = "a", $path = null)
     {
         $env = $env ?: \Yaf\ENVIRON;
         if (isset(static::$logger_instance[$env])) return static::$logger_instance[$env];
-        $filename = LOG_PATH . DS . $env . '.log';
+        $path = $path ?: LOG_PATH;
+        $filename = $path . DS . $env . '.log';
         static::$logger_instance[$env] = new static($filename, $open_mode);
         return static::$logger_instance[$env];
     }

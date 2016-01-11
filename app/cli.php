@@ -11,6 +11,7 @@ ini_set('memory_limit', '256M');
 define('APPLICATION_NOT_RUN', true);
 // Import application and bootstrap.
 \Yaf\Loader::import(dirname(__FILE__) . '/../public/index.php');
+
 $request = new \Yaf\Request\Simple();
 // parse cli
 global $argc, $argv;

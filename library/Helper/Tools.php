@@ -12,6 +12,7 @@ namespace Helper;
 
 use eYaf\Cache;
 use eYaf\Db;
+use eYaf\Logger;
 use Yaf\Application;
 use Yaf\Exception;
 use Yaf\Loader;
@@ -231,9 +232,8 @@ class Tools
      */
     public static function logfile($filename, $loginfo, $path = '/tmp/')
     {
-        $fp = fopen($path . $filename . '.log', 'a+');
-        fwrite($fp, "[" . date("Ymd H:i:s") . "] " . preg_replace('/[\r\n]/', '', $loginfo) . "\r\n");
-        fclose($fp);
+        Logger::getLogger($filename, "a+", $path)
+            ->log("[" . date("Ymd H:i:s") . "] " . preg_replace('/[\r\n]/', '', $loginfo) . "\r\n");
     }
 
 

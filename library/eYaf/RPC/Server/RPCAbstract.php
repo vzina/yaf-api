@@ -12,6 +12,5 @@ namespace eYaf\RPC\Server;
 
 abstract class RPCAbstract
 {
-    abstract public function setApi($object);
-    abstract public function handle();
+    abstract public function handle($object);
 }

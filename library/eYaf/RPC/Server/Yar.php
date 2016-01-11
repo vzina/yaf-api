@@ -12,16 +12,23 @@ namespace eYaf\RPC\Server;
 
 use eYaf\RPC\RPCException;
 
+/**
+ * 调用方法
+ * (new \eYaf\RPC\Server\Yar())->setApi($obj)->handle();
+ *
+ * Class Yar
+ * @package eYaf\RPC\Server
+ */
 class Yar extends RPCAbstract
 {
-    /**
-     * Yar 对象;
-     * \Yar_Server
-     * @var $_yar
-     */
-    protected $_yar;
 
-    public function setApi($object)
+    public function __construct()
+    {
+        if (!extension_loaded("yar"))
+            throw new RPCException('extension yar is not exist!');
+    }
+
+    public function handle($object)
     {
         if(!is_object($object)){
             if(class_exists($object)){
@@ -29,15 +36,7 @@ class Yar extends RPCAbstract
             }
             throw new RPCException("the {$object} is not a object!");
         }
-        $this->_yar = new \Yar_Server($object);
-        return $this;
-    }
-
-    public function handle()
-    {
-        if(!is_object($this->_yar)){
-            throw new RPCException("RPC 对象不存在！");
-        }
-        $this->_yar->handle();
+        $yar = new \Yar_Server($object);
+        $yar->handle();
     }
 }

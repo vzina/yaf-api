@@ -13,9 +13,7 @@ class ApiController extends \eYaf\Controllers
     public function indexAction()
     {
         if ($this->_request->isPost()) {
-            (new \eYaf\RPC\Server\Yar())
-                ->setApi($this)
-                ->handle();
+            (new \eYaf\RPC\Server\Yar())->handle($this);
         }
         $this->_response->setBody('<h1>404</h1>');
     }
@@ -27,6 +25,9 @@ class ApiController extends \eYaf\Controllers
      */
     public function test($p)
     {
-        return time() . "----".$p;
+        return array(
+            'test'=>time(),
+            'p'=>$p
+        );
     }
 }

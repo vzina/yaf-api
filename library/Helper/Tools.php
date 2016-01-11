@@ -25,9 +25,6 @@ class Tools
         static $config;
         if (!is_object($config)) {
             $config = call_user_func(Registry::get('config'));
-            if (is_object($config) && Registry::has('config')) {
-                Registry::del('config');
-            }
         }
         if (empty($name)) {
             return $config;
@@ -56,8 +53,11 @@ class Tools
         }
 
         if ($flag && ($cache = Registry::get($name))) return $cache;
-
-        $config = static::getConfig($name)->toArray() + array('adapter' => 'File', 'params' => array());
+        $config = array();
+        if(!is_null(static::getConfig($name))){
+            $config = static::getConfig($name)->toArray();
+        }
+        $config += array('adapter' => 'File', 'params' => array());
         $cache = Cache::factory($config);
         Registry::set($name, $cache);
         return $cache;
@@ -74,8 +74,11 @@ class Tools
         }
 
         if ($flag && $db = Registry::get($name)) return $db;
-
-        $config = static::getConfig($name)->toArray() + array('adapter' => 'Pdo\Mysql', 'params' => array());
+        $config = array();
+        if(!is_null(static::getConfig($name))){
+            $config = static::getConfig($name)->toArray();
+        }
+        $config += array('adapter' => 'Pdo\Mysql', 'params' => array());
         $db = Db::factory($config);
         Registry::set($name, $db);
         return $db;

@@ -13,6 +13,7 @@ namespace eYaf;
 use Helper\Tools;
 use Yaf\Controller_Abstract;
 use Yaf\Exception;
+use Yaf\Registry;
 
 class Controllers extends Controller_Abstract
 {
@@ -145,6 +146,13 @@ class Controllers extends Controller_Abstract
                 $this->model = $this->model(substr($class, 0, -10));
                 return $this->model;
             default:
+                if(true == Registry::has($key)){
+                    $value = Registry::get($key);
+                    if(is_callable($value)){
+                        $value = call_user_func($value);
+                    }
+                    return $value;
+                }
                 throw new Exception('Undefined property: ' . get_class($this) . '::' . $key);
         }
     }

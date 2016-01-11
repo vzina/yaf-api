@@ -3,18 +3,26 @@
 
 class IndexController extends \eYaf\Controllers
 {
+    public function init()
+    {
+        \Helper\Tools::cache('_yac');//缓存
+        \Helper\Tools::db('_db');//数据库链接
+    }
+
     public function indexAction()
     {
-//        \Helper\Tools::cache('_yac')->set('aaa','test');
-//        $client = new \eYaf\RPC\Client\Yar('http://yaf.central.com/api/');
-//
-//        var_dump($client->getRequest());
+        $client = new \eYaf\RPC\Client\Yar();
+        var_dump($client->call("http://yaf.central.com/api/", "test", array("parameters1")));
+//        $client->start();
+//        $client->call("http://120.24.48.77:8081/api/", "test", array("parameters1"), array($this, 'callback'));
+//        $client->call("http://120.24.48.77:8081/api/", "test", array("parameters2"), array($this, 'callback'));
+//        $client->call("http://yaf.central.com/api/", "test", array("parameters3"), array($this, 'callback'));
+//        $client->call("http://yaf.central.com/api/", "test", array("parameters4"), array($this, 'callback'));
+//        $client->loop();
 
-        \eYaf\RPC\Client\Yar::call("http://yaf.central.com/api/", "test", array("parameters1"), array($this, 'callback'));
-        \eYaf\RPC\Client\Yar::call("http://yaf.central.com/api/", "test", array("parameters2"), array($this, 'callback'));
-        \eYaf\RPC\Client\Yar::call("http://yaf.central.com/api/", "test", array("parameters3"), array($this, 'callback'));
-        \eYaf\RPC\Client\Yar::call("http://yaf.central.com/api/", "test", array("parameters4"), array($this, 'callback'));
-        \eYaf\RPC\Client\Yar::loop();
+        $this->_yac->aaa = 'test';
+        var_dump($this->_db->row('show tables;'));
+
         $this->_view->heading = 'Home Page!';
         $this->_view->display('index/index.phtml');
         $this->_response->setBody('Home Page!');
@@ -22,11 +30,10 @@ class IndexController extends \eYaf\Controllers
 
     public function testAction()
     {
-//        \Helper\Tools::cache('_redis')->delete('aaa');
-//        var_dump(\Helper\Tools::cache('_yac')->get('aaa'));
+        $this->_response->setBody($this->_yac->aaa);
     }
 
-    public function callback($retval, $callinfo)
+    public function callback($retval, $callinfo = null)
     {
         var_dump($retval);
     }

@@ -148,7 +148,7 @@ class Controllers extends Controller_Abstract
             default:
                 if(true == Registry::has($key)){
                     $value = Registry::get($key);
-                    if(is_callable($value)){
+                    if($value instanceof \Closure){
                         $value = call_user_func($value);
                     }
                     return $value;

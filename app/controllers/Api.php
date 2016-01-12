@@ -13,7 +13,8 @@ class ApiController extends \eYaf\Controllers
     public function indexAction()
     {
         if ($this->_request->isPost()) {
-            (new \eYaf\RPC\Server\Yar())->handle($this);
+            \Helper\Tools::logfile('test',file_get_contents('php://input'),LOG_PATH);
+            (new \eYaf\RPC\Yar\Server())->handle($this);
         }
         $this->_response->setBody('<h1>404</h1>');
     }

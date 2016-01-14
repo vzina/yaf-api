@@ -10,11 +10,12 @@ $_path = dirname(__DIR__);
 require_once $_path . '/vendor/autoload.php';
 // Import application and bootstrap.
 \Yaf\Loader::import($_path . '/public/index.php');
+unset($_path);
 try {
     // Add arguments parse
     $parser = new \Pagon\ArgParser();
-    $parser->add('type', array('help' => 'The path of cron list file', 'default' => 'file'));
-    $parser->add(array('--log', '-l'), array('help' => 'The file to log', 'default' => 'croon.log'));
+    $parser->add(array('--path', '-p'), array('help' => 'The path of cron list file'));
+    $parser->add(array('--log', '-l'), array('help' => 'The file to log'));
     $parser->add(array('--boot', '-b'), array('help' => 'The file to bootstrap'));
 
     // Try to parse the arguments
@@ -28,24 +29,25 @@ try {
         exit('The given bootstrap file "' . $args['boot'] . '" is not exists');
     }
 
-    $croonConfig = \Helper\Tools::getConfig('_croon', array());
+    $croonConfig = \Helper\Tools::getConfig('_croon', array(
+        'adapter' => 'file',
+        'params' => array(
+            'path' => SYS_CONFIG_PATH . 'croon.list',
+        ),
+    ));
 
     if (is_object($croonConfig)) {
         $croonConfig = $croonConfig->toArray();
     }
-    $croonConfig = array_merge(array(
-        'adapter' => 'file',
-        'params' => array(
-            'path' => $_path . '/config/croon.list'
-        ),
-        'log' => array(
-            'file' => $args['log']
-        )
-    ), $croonConfig);
+
+    if ($args['log']) $croonConfig['log'] = array('file' => $args['log']);
+    // Check path to run
+    if (($path = realpath($args['path'])) && is_file($path)) {
+        $croonConfig['adapter'] = 'file';
+        $croonConfig['params'] = array('path' => $path,);
+    }
     // Create croon object
     $croon = new \eYaf\Crontab\Croon($croonConfig);
-
-    unset($_path);
     !empty($boot) && Yaf\Loader::import($boot);
     $croon->run();
 } catch (\Exception $e) {

@@ -25,8 +25,8 @@ class Bootstrap extends Yaf\Bootstrap_Abstract
     public function _initConst(Yaf\Dispatcher $dispatcher)
     {
         date_default_timezone_set("Asia/Shanghai");
-        defined('PUBLIC_PATH') or define('PUBLIC_PATH', ROOT_PATH . '/public/');        /* 入口目录 */
-        defined('LOG_PATH') or define('LOG_PATH', ROOT_PATH . '/log/');       /* 日志目录 */
+        defined('PUBLIC_PATH') or define('PUBLIC_PATH', ROOT_PATH . 'public/');        /* 入口目录 */
+        defined('LOG_PATH') or define('LOG_PATH', ROOT_PATH . 'log/');       /* 日志目录 */
         defined('APPLICATION_IS_CLI') or define('APPLICATION_IS_CLI', (php_sapi_name() == 'cli') ?: false); /* 运行phpcli环境 */
         defined('DS') or define('DS', DIRECTORY_SEPARATOR);
         defined('IS_DEBUG') or define('IS_DEBUG', false);

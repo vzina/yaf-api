@@ -15,7 +15,7 @@ use Yaf\Controller_Abstract;
 use Yaf\Exception;
 use Yaf\Registry;
 
-class Controllers extends Controller_Abstract
+abstract class Controllers extends Controller_Abstract
 {
     protected $yafAutoRender = false;
 

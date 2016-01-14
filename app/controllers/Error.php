@@ -10,7 +10,7 @@ class ErrorController extends \Yaf\Controller_Abstract {
         $config = Yaf\Application::app()->getConfig();
         $this->getView()->setScriptPath($config->application->directory 
             . "/views");
-         
+
         $this->getView()->e = $exception;
         $this->getView()->e_class = get_class($exception);
         $this->getView()->e_string_trace = $exception->getTraceAsString();

@@ -9,7 +9,14 @@
   "type": "yaf",
   "require": {
     "php": ">=5.4.0",
-    "phpunit/phpunit": "4.8.18"
+    "phpunit/phpunit": "4.8.18",
+    "pagon/childprocess": "0.0.x",
+    "pagon/eventemitter": "*",
+    "pagon/logger": "*",
+    "pagon/argparser": "*"
+  },
+  "require-dev": {
+    "pagon/composer-packer": "*"
   },
   "autoload": {
     "psr-4": {

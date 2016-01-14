@@ -29,10 +29,7 @@ class Tools
         if (empty($name)) {
             return $config;
         }
-        if ($config->valid($name)) {
-            return $config->get($name);
-        }
-        return $default;
+        return $config->get($name) ?: $default;
     }
 
     /**

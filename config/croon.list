@@ -1,0 +1,4 @@
+* * * * * * ls -l >> /tmp/ls.log
+# 兼容系统crontab
+* * * * * pwd >> /tmp/pwd.log
+* * * * * * ls -l >> /tmp/ls1.log

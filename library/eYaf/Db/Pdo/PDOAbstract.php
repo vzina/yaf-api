@@ -75,6 +75,7 @@ abstract class PDOAbstract extends DBAbstract
         if ($this->_debug) {
             $this->log($sql . '@' . date('Y-m-d H:i:s'));
         }
+
         if ($this->_query = $this->_connection->query($sql)) {
             return $this;
         }

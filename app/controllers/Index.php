@@ -36,6 +36,10 @@ class IndexController extends \eYaf\Controllers
         $this->_response->setBody($this->_yac->aaa);
     }
 
+    public function NotfoundAction()
+    {
+        $this->_response->setBody(404);
+    }
     public function callback($retval, $callinfo = null)
     {
         var_dump($retval);

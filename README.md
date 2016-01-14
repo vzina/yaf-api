@@ -1,5 +1,13 @@
 #Yaf-api
-######yaf安装：
+###功能介绍
+- yaf框架为基础
+- 支持简单模型操作
+- 支持多数据库操作和主从操作
+- 支持缓存操作
+- 支持yar并行rpc
+- 支持纯php的定时任务，精确的秒级
+
+###yaf安装：
 ```shell
 sudo yum -y install gcc gcc-c++ make automake autoconf
 
@@ -12,7 +20,7 @@ wget http://pecl.php.net/get/yaf-2.2.9.tgz && tar zxvf yaf-2.2.9.tgz && cd yaf-2
 make && make install
 ```
 
-######yaf配置php.ini
+###yaf配置php.ini
 ```
 vi /usr/local/php/etc/php.ini
 
@@ -30,7 +38,7 @@ yaf.use_spl_autoload = 0
 
 ```
 
-######nginx配置：
+###nginx配置：
 ```
     server {
         listen       80;
@@ -62,37 +70,88 @@ yaf.use_spl_autoload = 0
 	access_log  /home/wwwlogs/yaf_access.log  main;
 }
 ```
+###实例
 
-######应用目录
+####定时任务
+##### 基本用法
+
+`croon.list`
+
 ```
---app           应用目录
-----controllers 控制器
-******Error.php 异常捕捉控制器(必须)
-----models      模型
-----plugins     插件
-----views       视图
-------error     错误视图
-****Bootstrap.php   引导文件
-****cli.php         命令行入口
---config        配置目录
-****application.ini 主配置文件
---library       类库目录
-----eYaf        自定义扩展
-----Helper      工具目录
-******Tools.php     工具类
---log           日志目录
---public        入口目录
-****index.php   入口文件
---tests         测试目录
---vendor        扩展目录
+* * * * * * ls -l >> /tmp/ls.log
+
+# 兼容系统crontab
+* * * * * pwd >> /tmp/pwd.log
 ```
 
-######yaf开发
+执行
+
+```
+./bin/croon.php -p config/croon.list -l croon.log
+```
+
+`croon.log`
+
+```
+[2013-04-20 14:07:01] 27a6c9 -  debug   - Croon...!!!
+[2013-04-20 14:07:01] 27a6c9 -   info   - Execute (ls >> /tmp/ls.log)
+[2013-04-20 14:07:01] 27a6c9 -   info   - Finish (ls >> /tmp/ls.log)[0]
+```
+
+##### 以mysql数据库为计划任务源
+* 修改配置文件的adapter参数为mysql
+* 表结构为
+```
+
++---------------------+--------------------------------------------------------+
+| time                | command                                                |
++---------------------+--------------------------------------------------------+
+| [秒] 分 时 日 月 周   | command                                                |
++---------------------+--------------------------------------------------------+
+
+```
+执行
+
+```
+./bin/croon.php -l croon.log
+```
+
+
+##### 高级用法
+
+`bootstrap.php`
+
+```php
+<?php
+
+// 绑定启动事件
+$croon->on('run', function() use($croon) {
+    // 注入db
+    $croon->db = new \PDO('mysql://localhost:3306;dbname=reports');
+});
+
+// 绑定执行事件
+$croon->on('executed', function ($command, $output) use ($croon) {
+    // 记录执行结果
+    $croon->db->exec(sprintf(
+        'INSERT INTO cron(command, status, stdout, stderr, create_time) VALUES ("%s", "%s", "%s", "%s", "%s")',
+        $command, $output[0], $output[1], $output[2], date('Y-m-d H:i:s'))
+    );
+});
+```
+
+执行
+
+```
+./bin/croon.php -p config/croon.list -l croon.log -b bootstrap.php
+```
+
+###yaf开发
 ```
 [yaf手册](http://www.laruence.com/manual/index.html)
 ```
 
-######本地访问
+###本地访问
 ```
 http访问:
     http://yaf.central.com/index/index?a=test

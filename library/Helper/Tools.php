@@ -13,92 +13,11 @@ namespace Helper;
 use eYaf\Cache;
 use eYaf\Db;
 use eYaf\Logger;
-use Yaf\Application;
 use Yaf\Exception;
-use Yaf\Loader;
 use Yaf\Registry;
 
 class Tools
 {
-    public static function getConfig($name = null, $default = null)
-    {
-        static $config;
-        if (!is_object($config)) {
-            $config = call_user_func(Registry::get('config'));
-        }
-        if (empty($name)) {
-            return $config;
-        }
-        return $config->get($name) ?: $default;
-    }
-
-    /**
-     * 缓存管理
-     * @param mixed $name 缓存配置名称
-     * @param bool $flag
-     * @return mixed
-     */
-    public static function cache($name = '', $flag = false)
-    {
-        if (empty($name)) {
-            $name = '_cache';
-        }
-
-        if (is_array($name)) {
-            $config = (array)$name + array('adapter' => 'File', 'params' => array());
-            return Cache::factory($config);
-        }
-
-        if ($flag && ($cache = Registry::get($name))) return $cache;
-        $config = array();
-        if(!is_null(static::getConfig($name))){
-            $config = static::getConfig($name)->toArray();
-        }
-        $config += array('adapter' => 'File', 'params' => array());
-        $cache = Cache::factory($config);
-        Registry::set($name, $cache);
-        return $cache;
-    }
-
-    public static function db($name = '', $flag = false)
-    {
-        if (empty($name)) {
-            $name = '_db';
-        }
-        if (is_array($name)) {
-            $config = (array)$name + array('adapter' => 'Pdo\Mysql', 'params' => array());
-            return Db::factory($config);
-        }
-
-        if ($flag && $db = Registry::get($name)) return $db;
-        $config = array();
-        if(!is_null(static::getConfig($name))){
-            $config = static::getConfig($name)->toArray();
-        }
-        $config += array('adapter' => 'Pdo\Mysql', 'params' => array());
-        $db = Db::factory($config);
-        Registry::set($name, $db);
-        return $db;
-    }
-
-
-    public static function model($name = null, $dir = null)
-    {
-        if (empty($name)) $name = Application::app()->getDispatcher()->getRequest()->getControllerName();
-        $class = ucfirst($name) . 'Model';
-        if (null === $dir) {
-            return new $class();
-        }
-        $file = rtrim($dir, '/') . '/' . $name . '.php';
-
-        if (is_file($file) && Loader::import($file)) {
-            return new $class();
-        }
-
-        throw new Exception("Can't load model '{$class}' from '{$dir}'");
-    }
-
-
     //如果是调试debug=1继续执行
     public static function echoPrint($str, $is_debug = 1)
     {

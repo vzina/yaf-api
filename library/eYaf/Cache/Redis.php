@@ -6,7 +6,7 @@ namespace eYaf\Cache;
  */
 class Redis extends CacheAbstract
 {
-    public $options = array(
+    protected $options = array(
         'persistent' => true,
         'host' => '127.0.0.1',
         'port' => 6379,
@@ -14,12 +14,13 @@ class Redis extends CacheAbstract
         'ttl' => 0,
     );
 
-    public $optionKeys = array(\Redis::OPT_SERIALIZER, \Redis::OPT_PREFIX);
+    protected $optionKeys = array(\Redis::OPT_SERIALIZER, \Redis::OPT_PREFIX);
 
     /**
      * Constructor
      *
      * @param array $options
+     * @throws CacheException
      */
     public function __construct($options = array())
     {
@@ -45,10 +46,10 @@ class Redis extends CacheAbstract
     /**
      * Set cache
      *
-     * @param string $key
-     * @param mixed $value
+     * @param mixed $id
+     * @param mixed $data
      * @param int $ttl
-     * @return boolean
+     * @return bool
      */
     public function set($id, $data, $ttl = null)
     {
@@ -71,7 +72,7 @@ class Redis extends CacheAbstract
      */
     public function get($id)
     {
-        if (is_string($id)) {
+        if (!is_array($id)) {
             return $this->conn->get($id);
         }
         return array_combine($id, $this->conn->mGet($id));

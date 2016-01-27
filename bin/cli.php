@@ -1,9 +1,10 @@
 #!/usr/bin/env php
 <?php
+
 /**
  * 命令行执行PHP 入口
- * php ./app/cli.php "/cli/crontab/sendmailt?a=1&b=c"
- * php ./app/cli.php "/{模块名}/{控制器名}/{方法名}?{参数}"
+ * php ./app/cli.php "/crontab/sendmailt?a=1&b=c"
+ * php ./app/cli.php "/{控制器名}/{方法名}?{参数}"
  */
 set_time_limit(0);
 ini_set('memory_limit', '256M');
@@ -11,7 +12,7 @@ ini_set('memory_limit', '256M');
 // like testcase, so that we can depand cli argv to choose which controller run it.
 define('APPLICATION_NOT_RUN', true);
 // Import application and bootstrap.
-\Yaf\Loader::import(dirname(__FILE__) . '/../public/index.php');
+\Yaf\Loader::import(dirname(__DIR__) . '/public/index.php');
 
 $request = new \Yaf\Request\Simple();
 // parse cli
@@ -47,6 +48,8 @@ if ($argc > 1) {
         $request->setControllerName(ucfirst(strtolower($controller)));
     }
 }
+//设置默认模块
+$request->setModuleName('Shell');
 
 // route uri => request
 \Yaf\Dispatcher::getInstance()->getRouter()->route($request);

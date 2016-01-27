@@ -17,6 +17,10 @@ use Yaf\Registry;
 
 abstract class Controllers extends Controller_Abstract
 {
+    /**
+     * 默认关闭自动渲染视图
+     * @var bool $yafAutoRender;
+     */
     protected $yafAutoRender = false;
 
     /**
@@ -51,12 +55,12 @@ abstract class Controllers extends Controller_Abstract
     }
 
 
-
     /**
      * Get var
      *
-     * @param sting $key
+     * @param sting|null $key
      * @param mixed $default
+     * @return mixed|null|\Yaf\Array
      */
     protected function getVar($key = null, $default = null)
     {
@@ -123,6 +127,32 @@ abstract class Controllers extends Controller_Abstract
     }
 
     /**
+     * Cancel current action proccess and forward to {@link notFound()} method.
+     *
+     * @return false
+     */
+    public function forwardTo404()
+    {
+//        die;
+        $this->forward('notFound');
+        $this->_view->setScriptPath(Tools::getConfig('application')->get('directory')
+            . "/views");
+        header('HTTP/1.0 404 Not Found');
+        return false;
+    }
+
+    /**
+     * Renders a 404 Not Found template view
+     *
+     * @return void
+     */
+    public function notFoundAction()
+    {
+        $this->_view->display('error/notfound.phtml');
+        exit(0);
+    }
+
+    /**
      * Dynamic set vars
      *
      * @param string $key
@@ -137,6 +167,8 @@ abstract class Controllers extends Controller_Abstract
      * Dynamic get vars
      *
      * @param string $key
+     * @return Models|mixed
+     * @throws Exception
      */
     public function __get($key)
     {
@@ -156,4 +188,6 @@ abstract class Controllers extends Controller_Abstract
                 throw new Exception('Undefined property: ' . get_class($this) . '::' . $key);
         }
     }
+
+
 }

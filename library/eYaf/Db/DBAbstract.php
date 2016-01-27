@@ -137,6 +137,7 @@ abstract class DBAbstract
      * Set Debug or not
      *
      * @param boolean $flag
+     * @return $this
      */
     public function debug($flag = true)
     {
@@ -150,7 +151,7 @@ abstract class DBAbstract
      * if $msg is null, then will return log
      *
      * @param string $msg
-     * @return array|Cola_Com_Db_Abstract
+     * @return array|DBAbstract
      */
     public function log($msg = null)
     {
@@ -236,32 +237,28 @@ abstract class DBAbstract
      *
      * @param array $conditions
      * @return array
+     * @throws DBException
      */
     public function find($conditions)
     {
-        $result = array();
-
         if (is_string($conditions)) $conditions = array('where' => $conditions);
+        if(empty($conditions['table'])) throw new DBException('[error] table is empty!');
 
         $conditions = $conditions + array(
-            'fileds' => '*',
-            'where' => 1,
-            'order' => null,
-            'start' => -1,
-            'limit' => -1
-        );
+                'fileds' => '*',
+                'where' => 1,
+                'order' => null,
+                'start' => -1,
+                'limit' => -1
+            );
 
-        extract($conditions);
+        $sql = "select {$conditions['fileds']} from {$conditions['table']} where {$conditions['where']}";
 
-        $sql = "select {$fileds} from $table where $where";
+        if (!empty($conditions['order'])) $sql .= " order by {$conditions['order']}";
 
-        if ($order) $sql .= " order by {$order}";
+        if (0 <= (int)$conditions['start'] && 0 <= (int)$conditions['limit']) $sql .= " limit {$conditions['start']}, {$conditions['limit']}";
 
-        if (0 <=$start && 0 <= $limit) $sql .= " limit {$start}, {$limit}";
-
-        $data = $this->result($sql);
-
-        return $data;
+        return $this->sql($sql);
     }
 
     /**
@@ -279,8 +276,8 @@ abstract class DBAbstract
             $keys .= "`$key`,";
             $values .= "'" . $this->escape($value) . "',";
         }
-        $sql = "insert into $table (" . substr($keys, 0, -1) . ") values (" . substr($values, 0, -1) . ");";
-        return $this->result($sql);
+        $sql = "insert into {$table} (" . substr($keys, 0, -1) . ") values (" . substr($values, 0, -1) . ");";
+        return $this->sql($sql);
     }
 
     /**
@@ -301,9 +298,9 @@ abstract class DBAbstract
 
         $str = implode(',', $tmp);
 
-        $sql = "update $table set " . $str . " where $where";
+        $sql = "update {$table} set {$str} where {$where}";
 
-        return $this->result($sql);
+        return $this->sql($sql);
     }
 
     /**
@@ -315,8 +312,8 @@ abstract class DBAbstract
      */
     public function delete($where = '0', $table)
     {
-        $sql = "delete from $table where $where";
-        return $this->result($sql);
+        $sql = "delete from {$table} where {$where}";
+        return $this->sql($sql);
     }
 
     /**
@@ -328,7 +325,7 @@ abstract class DBAbstract
      */
     public function count($where, $table)
     {
-        $sql = "select count(1) as cnt from $table where $where";
+        $sql = "select count(1) as cnt from {$table} where {$where}";
         $this->query($sql);
         $result = $this->fetch();
         return empty($result['cnt']) ? 0 : $result['cnt'];
@@ -354,9 +351,9 @@ abstract class DBAbstract
 
     abstract public function affectedRows();
 
-    abstract public function fetch();
+    abstract public function fetch($type = 'ASSOC');
 
-    abstract public function fetchAll();
+    abstract public function fetchAll($type = 'ASSOC');
 
     abstract public function lastInsertId();
 

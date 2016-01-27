@@ -20,6 +20,9 @@ class Mysqli extends DBAbstract
             throw new DBException('MYSQLI_EXTENSTION_DOES_NOT_SUPPORT_PERSISTENT_CONNECTION');
         }
 
+        /**
+         * @var \mysqli $this->_connection
+         */
         $this->_connection = mysqli_init();
 
         $connected = @mysqli_real_connect(
@@ -71,7 +74,8 @@ class Mysqli extends DBAbstract
      * Query SQL
      *
      * @param string $sql
-     * @return Cola_Com_Db_Mysqli
+     * @return Mysqli
+     * @throws DBException
      */
     public function query($sql)
     {
@@ -216,7 +220,8 @@ class Mysqli extends DBAbstract
     /**
      * Get error
      *
-     * @return string|array
+     * @param string $type
+     * @return array|string
      */
     public function error($type = 'STRING')
     {

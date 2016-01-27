@@ -4,11 +4,18 @@
  */
 namespace eYaf;
 
+use eYaf\Db\DBException;
 use eYaf\Db\Masterslave;
 
 class Db
 {
-    public static function factory($config)
+    /**
+     * db工厂方法
+     * @param array $config
+     * @return Db\DbAbstract|Masterslave
+     * @throws DBException
+     */
+    public static function factory(array $config)
     {
         $config += array('masterslave' => false);
 
@@ -18,6 +25,12 @@ class Db
         $adapter = $params = null;
         extract($config);
         $class = __NAMESPACE__ . '\Db\\' . ucfirst($adapter);
-        return new $class($params);
+        $db = new $class($params);
+
+        if (!($db instanceof Db\DBAbstract)) {
+            throw new DBException("[error] {$class} is not instanceof Db\\DBAbstract");
+        }
+
+        return $db;
     }
 }

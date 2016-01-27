@@ -15,8 +15,8 @@ abstract class Tasks extends Controllers
     final public function init()
     {
         if (!APPLICATION_IS_CLI) {
-//            die;
-            $this->forward('Index','Index','Notfound');
+            return $this->forwardTo404();
         }
+        if (method_exists($this, '_init')) $this->_init();
     }
 }

@@ -5,9 +5,9 @@ namespace eYaf\Cache;
  */
 abstract class CacheAbstract
 {
-    public $conn;
+    protected $conn;
 
-    public $options = array(
+    protected $options = array(
         'ttl' => 900
     );
 

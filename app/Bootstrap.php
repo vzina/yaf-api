@@ -38,16 +38,7 @@ class Bootstrap extends Yaf\Bootstrap_Abstract
      */
     public function _initConfig(Yaf\Dispatcher $dispatcher)
     {
-        Yaf\Registry::set('config', function () {
-            $sysConfig = Yaf\Application::app()->getConfig();
-            if(defined('CONFIG_PATH') && file_exists(CONFIG_PATH . 'config.inc.php')) {
-                $config = array();
-                Yaf\Loader::import(CONFIG_PATH . 'config.inc.php');
-                $config = array_merge($sysConfig->toArray(), $config);
-                return new Yaf\Config\Simple($config);
-            }
-            return $sysConfig;
-        });
+        Yaf\Registry::set('config', Yaf\Application::app()->getConfig());
     }
 
     /**
@@ -66,7 +57,7 @@ class Bootstrap extends Yaf\Bootstrap_Abstract
     public function _initPlugins(Yaf\Dispatcher $dispatcher)
     {
         $config = Yaf\Application::app()->getConfig();
-        if ($config->valid('application.log.status') && $config->get('application.log.status')) {
+        if ($config->get('application.log.status')) {
             $dispatcher->registerPlugin(new LogPlugin());
         }
     }

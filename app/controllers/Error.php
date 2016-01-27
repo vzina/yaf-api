@@ -8,7 +8,7 @@ class ErrorController extends \Yaf\Controller_Abstract {
 
         // fallback views path to global when error occured in modules.
         $config = Yaf\Application::app()->getConfig();
-        $this->getView()->setScriptPath($config->application->directory 
+        $this->getView()->setScriptPath($config->application->directory
             . "/views");
 
         $this->getView()->e = $exception;

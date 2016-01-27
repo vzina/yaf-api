@@ -4,6 +4,8 @@
  */
 namespace eYaf\Db;
 
+use eYaf\Db;
+
 class Masterslave extends DBAbstract
 {
     /**
@@ -16,21 +18,21 @@ class Masterslave extends DBAbstract
     /**
      * Master MySQL Adapter
      *
-     * @var Cola_Com_Db_Abstract
+     * @var DBAbstract
      */
     protected $_master = null;
 
     /**
      * Slave MySQL Adapter
      *
-     * @var Cola_Com_Db_Abstract
+     * @var DBAbstract
      */
     protected $_slave = null;
 
     /**
      * Current MySQL Adapter
      *
-     * @var Cola_Com_Db_Abstract
+     * @var DBAbstract
      */
     protected $_mysql = null;
 
@@ -93,7 +95,7 @@ class Masterslave extends DBAbstract
     /**
      * Master MySQL Adapter
      *
-     * @return Cola_Com_Db_Abstract
+     * @return DBAbstract
      */
     public function master()
     {
@@ -105,7 +107,7 @@ class Masterslave extends DBAbstract
             'params'  => $this->_config['master']
         );
 
-        $this->_master = Cola_Com_Db::factory($config);
+        $this->_master = Db::factory($config);
         $this->_slave = $this->_master;
         $this->_mysql = $this->_master;
 
@@ -116,7 +118,7 @@ class Masterslave extends DBAbstract
      * Slave MySQL Adapter
      *
      * @param string $name
-     * @return Cola_Com_Db_Abstract
+     * @return DBAbstract
      */
     public function slave($name = null)
     {
@@ -132,7 +134,7 @@ class Masterslave extends DBAbstract
             'params'  => $params
         );
 
-        $this->_slave = Cola_Com_Db::factory($config);
+        $this->_slave = Db::factory($config);
         $this->_mysql = $this->_slave;
 
         return $this->_slave;
@@ -187,7 +189,7 @@ class Masterslave extends DBAbstract
      * if $msg is null, then will return log
      *
      * @param string $msg
-     * @return array|Cola_Com_Db_Abstract
+     * @return array|DBAbstract
      */
     public function log($msg = null)
     {
@@ -311,7 +313,8 @@ class Masterslave extends DBAbstract
     /**
      * Get error
      *
-     * @return string|array
+     * @param string $type
+     * @return array|string
      */
     public function error($type = 'STRING')
     {
@@ -447,6 +450,7 @@ class Masterslave extends DBAbstract
      *
      * @param string $key
      * @return mixed
+     * @throws DBException
      */
     public function __get($key)
     {

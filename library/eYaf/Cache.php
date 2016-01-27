@@ -4,13 +4,28 @@
  */
 namespace eYaf;
 
+use eYaf\Cache\CacheException;
+
 class Cache
 {
-	public static function factory($config)
-	{
-		$adapter = $params = null;
-	    extract($config);
+    /**
+     * Cache工厂方法
+     * @param array $config
+     * @return Cache\CacheAbstract
+     * @throws CacheException
+     */
+    public static function factory($config)
+    {
+        $adapter = $params = null;
+        extract($config);
+
         $class = __NAMESPACE__ . '\Cache\\' . ucfirst($adapter);
-        return new $class($params);
-	}
+        $cache = new $class($params);
+
+        if (!($cache instanceof Cache\CacheAbstract)) {
+            throw new CacheException("[error] {$class} is not instanceof Cache\\CacheAbstract");
+        }
+
+        return $cache;
+    }
 }

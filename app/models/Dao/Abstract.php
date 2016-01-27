@@ -38,6 +38,16 @@ abstract class AbstractModel
         return call_user_func(array($className, 'getInstance'));
     }
 
+    protected static function http($name = null)
+    {
+        if (empty($name)) {
+            $name = static::_getClassName();
+        }
+        $name = str_replace('Model', '', $name);
+        $className = '\Http\\' . $name . '\\' . $name . 'ClientModel';
+        return call_user_func(array($className, 'getInstance'));
+    }
+
     protected static function _getClassName()
     {
         return substr(strrchr(get_class(new static), '\\'), 1);

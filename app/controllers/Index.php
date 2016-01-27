@@ -10,7 +10,7 @@ class IndexController extends \eYaf\Controllers
 
     public function indexAction()
     {
-        var_dump(\Dao\UserModel::test(1));
+        var_dump(\Dao\UserModel::test(1), \Dao\UserModel::httpTest());
         $this->_yac->aaa = 'test';
 //
         var_dump($this->_yac->aaa);
@@ -28,10 +28,6 @@ class IndexController extends \eYaf\Controllers
     public function notfoundAction()
     {
         $this->_response->setBody(404);
-    }
-    public function callback($retval, $callinfo = null)
-    {
-        var_dump($retval);
     }
 }
 

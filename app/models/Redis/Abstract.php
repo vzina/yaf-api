@@ -70,7 +70,7 @@ abstract class AbstractModel
         $_config['params'][\Redis::OPT_PREFIX] = $this->_keyPrefix ?: get_class($this);
         $_config['params'][\Redis::OPT_SERIALIZER] = \Redis::SERIALIZER_PHP;
 
-        return Cache::factory($_config);
+        return Cache::instance('__redis_model__', $_config);
     }
 
     public static function getInstance()

@@ -10,13 +10,13 @@
 namespace Http\User;
 
 
-use Http\AbstractModel;
+use Http\BaseModel;
 
 class UserServerModel
 {
     public static function handle()
     {
-        AbstractModel::getInstance()->handle(new static);
+        BaseModel::getInstance()->handle(new static);
     }
 
     public function test()

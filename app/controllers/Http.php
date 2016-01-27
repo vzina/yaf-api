@@ -11,8 +11,7 @@ class HttpController extends \eYaf\Controllers
 {
     public function indexAction()
     {
-        $client = new \Http\User\UserClientModel();
-        var_dump($client->test());
+        var_dump(\Dao\UserModel::httpTest());
     }
 
     public function handleAction()

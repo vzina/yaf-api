@@ -5,6 +5,7 @@
 namespace eYaf;
 
 use eYaf\Cache\CacheException;
+use Yaf\Registry;
 
 class Cache
 {
@@ -14,7 +15,7 @@ class Cache
      * @return Cache\CacheAbstract
      * @throws CacheException
      */
-    public static function factory($config)
+    private static function factory($config)
     {
         $adapter = $params = null;
         extract($config);
@@ -25,6 +26,31 @@ class Cache
         if (!($cache instanceof Cache\CacheAbstract)) {
             throw new CacheException("[error] {$class} is not instanceof Cache\\CacheAbstract");
         }
+
+        return $cache;
+    }
+
+    public static function instance($name, array $config = array())
+    {
+        if (empty($name)) $name = '_cache';
+        /** 单例*/
+        if (Registry::has($name)) return Registry::get($name);
+
+        if (empty($config)) {
+            /** @var \Yaf\Config\Ini $_config */
+            $_config = Registry::get('config');
+            if (!$_config || !($tmp = $_config->get($name))) {
+                return false;
+            }
+            $config = $tmp->toArray();
+        }
+
+        if (empty($config['adapter'])) {
+            $config['adapter'] = 'file';
+        }
+
+        $cache = self::factory($config);
+        Registry::set($name, $cache);
 
         return $cache;
     }

@@ -27,7 +27,6 @@ class Bootstrap extends Yaf\Bootstrap_Abstract
         date_default_timezone_set("Asia/Shanghai");
         defined('PUBLIC_PATH') or define('PUBLIC_PATH', ROOT_PATH . 'public/');        /* 入口目录 */
         defined('LOG_PATH') or define('LOG_PATH', ROOT_PATH . 'log/');       /* 日志目录 */
-        defined('APPLICATION_IS_CLI') or define('APPLICATION_IS_CLI', (php_sapi_name() == 'cli') ?: false); /* 运行phpcli环境 */
         defined('DS') or define('DS', DIRECTORY_SEPARATOR);
         defined('IS_DEBUG') or define('IS_DEBUG', false);
     }
@@ -68,8 +67,8 @@ class Bootstrap extends Yaf\Bootstrap_Abstract
      */
     public function _initRoute(Yaf\Dispatcher $dispatcher)
     {
-        if(defined('SYS_CONFIG_PATH') && is_file(SYS_CONFIG_PATH . 'routing.ini')) {
-            $config = new Yaf\Config\Ini(SYS_CONFIG_PATH . 'routing.ini');
+        if(defined('CONFIG_PATH') && is_file(CONFIG_PATH . 'routing.ini')) {
+            $config = new Yaf\Config\Ini(CONFIG_PATH . 'routing.ini');
             $dispatcher->getRouter()->addConfig($config);
         }
     }

@@ -254,26 +254,7 @@ abstract class AbstractModel
     public function db($name = null, array $config = array())
     {
         if (empty($name)) $name = $this->_db;
-        /** 单例*/
-        if (Registry::has($name)) return Registry::get($name);
-
-        if (empty($config)) {
-            /** @var \Yaf\Config\Ini $_config */
-            $_config = Registry::get('config');
-            if (!$_config || !($tmp = $_config->get($name))) {
-                return false;
-            }
-            $config = $tmp->toArray();
-        }
-
-        if (empty($config['adapter'])) {
-            $config['adapter'] = 'Pdo\Mysql';
-        }
-
-        $db = Db::factory($config);
-        Registry::set($name, $db);
-
-        return $db;
+        return Db::instance($name, $config);
     }
 
     public function gameDb()

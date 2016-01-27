@@ -14,12 +14,12 @@ class UserModel extends AbstractModel
 {
     public static function test($userId)
     {
-        $redis = static::redis();
-        $user = $redis->find($userId);
-        if (!$user) {
+//        $redis = static::redis();
+//        $user = $redis->find($userId);
+//        if (!$user) {
             $user = static::mysql()->getUser($userId);
-            if ($user) $redis->update($userId, $user);
-        }
+//            if ($user) $redis->update($userId, $user);
+//        }
         return $user;
     }
 }

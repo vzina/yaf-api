@@ -86,10 +86,10 @@ class AbstractModel
      * @param $uri
      * @param $method
      * @param array $parameters
-     * @param null $callback
+     * @param callable $callback
      * @return $this|mixed
      */
-    public function call($uri, $method, $parameters = array(), $callback = null)
+    public function call($uri, $method, $parameters = array(), callable $callback = null)
     {
         if (!$this->_sync) {
             $this->rpc = new \Yar_Client($uri);
@@ -111,10 +111,10 @@ class AbstractModel
     /**
      * 发送并行请求
      * @param null $callback
-     * @param null $error_callback
+     * @param callable $error_callback
      * @return $this
      */
-    public function loop($callback = null, $error_callback = null)
+    public function loop($callback = null, callable $error_callback = null)
     {
         \Yar_Concurrent_Client::loop($callback, $error_callback);
         $this->_sync = false;//关闭并行

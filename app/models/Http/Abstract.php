@@ -16,7 +16,7 @@ use Yaf\Exception;
  * Class AbstractModel
  * @package Http
  */
-class AbstractModel
+abstract class AbstractModel
 {
     protected static $_instance = null;
 

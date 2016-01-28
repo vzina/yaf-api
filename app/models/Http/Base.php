@@ -126,7 +126,7 @@ class BaseModel
             if(class_exists($object)){
                 $object = new $object;
             }
-            throw new Exception("the {$object} is not a object!");
+            throw new Exception("[error] the {$object} is not a object!");
         }
         $yar = new \Yar_Server($object);
         $yar->handle();

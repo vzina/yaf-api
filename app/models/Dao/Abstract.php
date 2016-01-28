@@ -43,7 +43,7 @@ abstract class AbstractModel
         if (empty($name)) {
             $name = static::_getClassName();
         }
-        $name = str_replace('Model', '', $name);
+        $name = strtr($name, array('Model' => ''));
         $className = '\Http\\' . $name . '\\' . $name . 'ClientModel';
         return call_user_func(array($className, 'getInstance'));
     }

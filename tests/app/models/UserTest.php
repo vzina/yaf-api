@@ -5,13 +5,12 @@ use Test\PHPUnit\ModelTestCase;
 class UserTest extends ModelTestCase {
 
     public function testGetUserName() {
-        $model = new \TestModel();
         $userId = 1;
-        $result = $model->getTestName($userId);
-        $this->assertEquals('iceup', $result);
+        $result = \Dao\UserModel::test($userId);
+        $this->assertArrayHasKey('group_id', $result);
 
         $userId = 100;
-        $result = $model->getTestName($userId);
+        $result = \Dao\UserModel::test($userId);
         $this->assertFalse($result);
     }
 

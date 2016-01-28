@@ -50,6 +50,6 @@ abstract class AbstractModel
 
     protected static function _getClassName()
     {
-        return substr(strrchr(get_class(new static), '\\'), 1);
+        return substr(strrchr(get_called_class(), '\\'), 1);
     }
 }

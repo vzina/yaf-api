@@ -14,7 +14,7 @@ use Yaf\Exception;
 /**
  * 客户端调用
  * 单个调用
- * $client = static::getInstance();
+ * $client = BaseModel::getInstance();
  * $client->call("http://host/api/", "test", array("parameters1"), array($this, 'callback'));
  *
  * 并行调用
@@ -26,15 +26,14 @@ use Yaf\Exception;
  * $client->loop();
  *
  * 服务端调用
- * $server = static::getInstance();
+ * $server = BaseModel::getInstance();
  * $server->handle($obj);
  *
- * Class AbstractModel
+ * Class BaseModel
  * @package Http
  */
 class BaseModel
 {
-    protected $rpc;
     protected $_sync = false;
     /**
      * $key 可以是:  YAR_OPT_PACKAGER, (打包类型)
@@ -50,7 +49,7 @@ class BaseModel
     protected function __construct()
     {
         if (!extension_loaded("yar"))
-            throw new Exception('extension yar is not exist!');
+            throw new Exception('[error] extension yar is not exist!');
     }
 
     /**
@@ -89,16 +88,16 @@ class BaseModel
      * @param callable $callback
      * @return $this|mixed
      */
-    public function call($uri, $method, $parameters = array(), callable $callback = null)
+    public function call($uri, $method, array $parameters = array(), callable $callback = null)
     {
         if (!$this->_sync) {
-            $this->rpc = new \Yar_Client($uri);
+            $rpc = new \Yar_Client($uri);
             if (!empty($this->_opt) && is_array($this->_opt)) {
                 foreach ($this->_opt as $key => $value) {
-                    $this->rpc->setOpt($key, $value);
+                    $rpc->setOpt($key, $value);
                 }
             }
-            $result = call_user_func_array(array($this->rpc, $method), $parameters);
+            $result = call_user_func_array(array($rpc, $method), $parameters);
             if (!empty($callback) && is_callable($callback)) {
                 $result = call_user_func($callback, $result);
             }

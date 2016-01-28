@@ -11,7 +11,6 @@ namespace Redis;
 
 
 use eYaf\Cache;
-use Helper\Tools;
 use Yaf\Registry;
 
 /**
@@ -25,7 +24,7 @@ abstract class AbstractModel
 
     /**
      * redis对象
-     * @var Cache\CacheAbstract
+     * @var \redis
      */
     protected $_redis;
 
@@ -50,6 +49,7 @@ abstract class AbstractModel
     protected function __construct()
     {
         $this->_redis = $this->connect();
+        $this->_redis->select(intval($this->_db));
     }
 
     protected function connect($config = array())
@@ -58,7 +58,7 @@ abstract class AbstractModel
             $config = $this->_configName;
         }
         $_config = array();
-
+        /** @var \Yaf\Config\Ini $sysConfig */
         $sysConfig = Registry::get('config');
         if ($sysConfig && ($tmp = $sysConfig->get($config))) {
             $_config = $tmp->toArray();
@@ -90,5 +90,10 @@ abstract class AbstractModel
     public function update($key, $data, $ttl = 0)
     {
         return $this->_redis->set($key, $data, $ttl);
+    }
+
+    public function getSelectDb()
+    {
+        return $this->_db;
     }
 }
